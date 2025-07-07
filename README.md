@@ -1,60 +1,53 @@
-# Project_template
-
-Это шаблон для решения проектной работы. Структура этого файла повторяет структуру заданий. Заполняйте его по мере работы над решением.
-
 # Задание 1. Анализ и планирование
-
-<aside>
-
-Чтобы составить документ с описанием текущей архитектуры приложения, можно часть информации взять из описания компании и условия задания. Это нормально.
-
-</aside>
 
 ### 1. Описание функциональности монолитного приложения
 
 **Управление отоплением:**
 
-- Пользователи могут…
-- Система поддерживает…
-- …
+- Пользователи могут: включать и выключать отопление в доме через веб-интерфейс, получать информацию о текущем состоянии системы.
+- Система поддерживает: подключение к устройствам отопления, управление устройствами только после ручной настройки специалистом при установке, жёсткую привязку устройств к конкретному дому и пользователю.
 
 **Мониторинг температуры:**
 
-- Пользователи могут…
-- Система поддерживает…
-- …
+- Пользователи могут: просматривать текущую температуру в доме через веб-интерфейс.
+- Система поддерживает: сбор температуры с датчиков только по инициативе сервера.
 
 ### 2. Анализ архитектуры монолитного приложения
 
-Перечислите здесь основные особенности текущего приложения: какой язык программирования используется, какая база данных, как организовано взаимодействие между компонентами и так далее.
+**Язык программирования**: Go <br/>
+**База данных**: PostgreSQL <br/>
+**Архитектура**: Монолитная, все компоненты системы (обработка запросов, бизнес-логика, работа с данными) находятся в рамках одного приложения.<br/>
+**Взаимодействие**: Синхронное, запросы обрабатываются последовательно.<br/>
+**Масштабируемость**: Ограничена, так как монолит сложно масштабировать по частям.<br/>
+**Развертывание**: Требует остановки всего приложения.<br/>
 
 ### 3. Определение доменов и границы контекстов
 
-Опишите здесь домены, которые вы выделили.
+**Управление устройствами** – добавление/удаление устройств, управление настройками отопления, отправка команд на устройства.<br/>
+
+**Мониторинг** – получение температуры и состояния устройств (датчиков/термостатов).<br/>
+
+**Установка и подключение устройств** – процессы, связанные с физическим подключением оборудования.<br/>
+
+**Пользовательский доступ и интерфейс** – веб-интерфейс или мобильное приложение для управления системой и просмотра состояния.<br/>
+
+**Интеграция с оборудованием** – прямое взаимодействие с физическими датчиками и отопительными устройствами.<br/>
 
 ### **4. Проблемы монолитного решения**
 
-- …
-- …
-- …
+- Сложно масштабировать отдельные части функциональности
 
-Если вы считаете, что текущее решение не вызывает проблем, аргументируйте свою позицию.
+- Высокая связанность — изменения в одной части требуют повторной сборки всего приложения
 
-### 5. Визуализация контекста системы — диаграмма С4
+- Нет возможности внешним партнёрам или пользователям самостоятельно добавлять устройства
 
-Добавьте сюда диаграмму контекста в модели C4.
+- Сложно внедрять новые устройства без переделки всей системы
 
-Чтобы добавить ссылку в файл Readme.md, нужно использовать синтаксис Markdown. Это делают так:
+- Низкая устойчивость к сбоям
 
-```markdown
-[Текст ссылки](URL)
-```
+### 5. Визуализация контекста системы — диаграмма С4
 
-Замените `Текст ссылки` текстом, который хотите использовать для ссылки. Вместо `URL` вставьте адрес, на который должна вести ссылка. Например:
-
-```markdown
-[Посетите Яндекс](https://ya.ru/)
-```
+[Визуализация контекста системы — диаграмма C4](https://www.plantuml.com/plantuml/uml/lLJDJjjS4Dtp5Fwo2XBWpRVg2WbLxO9AQQ5hv2Itn99ZH_PDItSaG6b5LRPLLQbLVzHjeBcDGubvXRblr3CJWwrWTbM517XyPiuvy-FrH7knxdU3fV_yi1NqsweV1qv7wrvoptLZxyNQhgyx_MO_KN4h2hKAzLehwhgzm0ivRJNHxS1lkXl_hpOuzFJHfjlr4grYX7OsE6DFh_N-Ba6idYLkHtdjP87ByqCL_oEsRYyAELtObXegJgAmpdLNd1fzeen-sxSqmTzp6jaX6NwkyRiFYCtiqEupXbAxRm_8sA536M0PNI5eQ4Of6OTIXwu0v286m5C1IhLB017YslQ0QpZsM0A69Wx3wSm5AACpIfaQb2SqHKNcbcA7m4pjeBPyBLwhLYVqMxuNiiml01s9ZWkH_TKEa3X2P8Jo4Cx6H8-e1DEOBi3q3ZhcSUWQv3wdaem4I7C0p21jP8_0lRJr4ZtjrhjH60MO3LDzv0xbtHdAVqRwm4xmyEkwFxLRO8VbEG-Y5P1BXcYrfr3r1XdJYYRJvRK100zOV04Uir_fd45cfQN2mixzFLrlg-T-IoNIi0htTIw9w36tbL9tFWgU4qFarScosFe6n8HI6Ug0iMGg6xheb0s9NcIb0aA04-OkynKPtxWqTwmJV9LjDQ6f4ILwDrPRZpT5uNSXdPMM5PqwX9Dz6UuhF8Cn0sdbCPpQevLAHno7OLaHb1vp1CKhTPBX_ZzHGNvvvIrwRmS5zVp6MFV3xUs6ox-saCgPvRKlvty6tKzASu75dLPfhac2hC-Cu_dPeWa6a84B31fbNqkhyFOSFpYON471MbwVybHlxco2YCHHgxZ0EqOeNoBvRF06cCKhpGTtMqIJ4t_8yPKlF0KdFvNFWZcm4AYnhi8sFeL_0000)
 
 # Задание 2. Проектирование микросервисной архитектуры
 
@@ -62,93 +55,47 @@
 
 **Диаграмма контейнеров (Containers)**
 
-Добавьте диаграмму.
+[Диаграмма контейнеров](https://www.plantuml.com/plantuml/uml/fLNFQnj76BthhvZgv82ZfT1JJr5SueRMGbWAz1OcqjXUl3-MtTa6KGfMrCG5bRY5GaCFTcdfNNPblB8b-L-O-O_wljdLUhtUgeLU4istC--zxtjlnayYoKCPkqxj8zlhEN5VnA733gGCeayjA-Il6_ksF8XVnP48UxudXISRFT-r0eTxTEnn9FkE_ShQ-kHncqelThwqN1v94QBqSWidkEs9i14GHQqjmiZtDWXiazNLcLgg6_s3kiB_5sgYtwXBMjVfsn_gLX-fYRf0vKHTwZTCBR5XgMxL3ROjL89_vvkCjj5nR3dADXgSEJQYHAXwX4-Z-gDQhJE0ClVbKp_s-ZmSR4GV4zNl-YT2rMCrO-fdWCthZzWtDSPo-HiyiBUv5A_v00UQxUSiMv7KRPzPhBNzlFML4Nwgpa4yDFJ7Ag76Z2feccAvI6akz5iGJV63OM-YXwbeFM8gOH0_WUJlIJRgYRh2-XrslKSJHLbxeR6a3zvdsK_M30BIiIjuJqBOCoUMSCD8-m1sq03sEv3Dz13JgxJWfCJJ5r_RFR7bkoutP9-PDTlX7jyNBZB1EYAaKZgFVpCmMJbjfZ57ntf44p1EpkWNQQ4FbJgwmW6f30TtIl9IIKYUCX0SPqQ03fLp8-xSv6EScvGA8oUmX9wAcLDuCnAWly1g_Hn-0zfVv33XPJwU8BSJyfQIJ0x3a4HThxx-WotaMUL0TiM-7TsRXwbKZ-DFq_Y2J62KHr0lKPgl8cQ6Ksc8VbjYvx7qNIvjtxiRI3El_QTC0FiT3O42JwsRDD0EYWg9AkR_GHuyNzfxTi_G0R-LBolPJu5LvW_YwC0IBhSTj8mwNLBYpTwO1pVXaEyTSe3jY2Y2v-nfw1-cj-iB-cArcjrEIfOdZ58FQz6gYTtOT3IhY9fADhEvaq7aFCub9gzJVTI0aczhjLtXPEzduVAh3m3FCwD7X4WgFkzssnsSCwVkzjzxpTGlO3EFA9Z7nLDqgBZrVlBLZsi2RB4C4cKIjOAjG2s_BUfNCe0cWAx764ZkMUx96hJI2r7ghtBewz3ArqkTfK0ulwJpbfdwL5sZoVVwUFM7gUBwh66fkaR__weK20rZQSvPaAcZ4K9wG_QbmM7gkkX0dcqc_S3kPVhBSyxnoizjvPDQZLcypIN0gVchCIHDJ2rAbua2KSPxWg37hlCt)
 
 **Диаграмма компонентов (Components)**
 
 Добавьте диаграмму для каждого из выделенных микросервисов.
 
+[Device Management Service](https://www.plantuml.com/plantuml/uml/bPHDJ_j64CRl-HJRN1gaWYyzzKG82Af2bPBqZ3Rs4gpw9RBNqAYgn4jRG5H2xQcdqgggUWq94IOXuIkClr6VNSTW9odg_m3Ipdhcz-mpCraF9Gzav3gbZspFT29BH873ZgJiX9yPHi1FrjgsF8fQKIW2q_UayEIQwRj6n-6UIbiDfUNOBQFswMfTXRxUspLS7aeH87HGyzsExwcSZaAKQgZ0RKy41nj-v5ayw5OiSMoR0X-wtBC-OULDVMPxtEDjuIALDKIWGcLSqb_qafnIZ_eqfY5DAAOXesboJbDwUGlHCwCuZMUVZwZ7y6zAppXEwA6ymhw3danVXNTir9_9ODNwvmhNtg_NZ9rciwxPTyWU9nV99IeCa_D2kUH6urGYs-PIdF1kUILNtamBx-3F4K6ED8iemBQlCR-YuXYlUA0uEKqkKbJCS3h36o619idj4W45NYWX8lKmU3ErWUZCsWBoJsMT1gBe8vnApd4UuQtN5CDCaAV9cN8PvCnXt284UwVqf2_x1GLfNwiMxyYy11qem7-ZYSODLAUIdo3Y5a2M_03E8qwND0H_f8HGl8HAFNMHPs-sAbRh3JcpEcIR6mfOzqFP3aJZgrsD_rjXrQCMEwfS7oCoA9QlTAAMOuT7-bbRnuYmUXOfluRsV2joH3euwEAzxkaexQSsbEwJ6-XNpmLDTNgGcJs4fhvkEDu6zFUbqiSCWp71pLKszMeM7l0Vdy6ZM3bKQdInUUx1rhSOw4ZwBfUsxq52zVLGsAO_Q0Z283ze4-hDgzFT6QkUgqyWBLP-v5cUB-r3syneNwR7HTxlMdGVPQwp7T8JdVnCZ_gYzyfw0g6qBvnqCHVMX-wqIHXQvFooR1TKxdpQt5P0pprDD7YShfIXVozIYQTfQCdm_qVrkOb7-TplZmRyNvrMIsybY3-cq_bUSl5HQUe_QfnJYmqz8bVlFwLO8pVV7rugbrmOmQPmX2jaqDqNfh2FXSNqdfJLT8PTpsG6-u8VViCNoynDLnKMoMPWjw7rlIhhmhCYr_aN)
+
+[Device Telemetry Service](https://www.plantuml.com/plantuml/uml/ZLJFJnD15BxlNp7s8YH2Bvuy0OL48sXfLwzakpkK3VkZcPsjDiQaG508H28nyQPmyBwjD2qMoh_mvZ_opJXTEeqeXpOpR_Pzt_lUV6yM4kumdeQ1zS2Ft23rQCe2iiLv8tbIB3BdpNpTvrjfBKqeS-E8quZFkt5OR0HE9DFc4ku5VgrOUZnNbg5NQwl5q4auPHZQACLX8uvaJaDIM5O98Hm_ecnZAKuZps6j6OysVPVYbw4JUOz8OLdjYKq36bBEMgHAcOmKy0o-GKUq8OCEP69N744NrpsnIs10n0wCnBuwlHOdAYfseGT3_5t9BHuDn2S28tco9tPKP0INSWNTmYnvPrbvmJDEmqV2soeMoyza1PMLgasa2XO70MMggEyI6QxnTmNPtSJY8sxQ6EoJfxPT9kMNLRimEq69_KtIa3A3jwI3acd9SRVhJ3REQCev357FmJsvrzPjk_ZSsTns3FA6mv8fwh8AIOhR5PmXJHywYDhMX70XMuvDFuAU0Tbq0jzpU6oYljPH1QStVXoHjTXB0vetT0HTMRA-INNHG-pm1JADrDqT_qKf38m266t4YOzKBQE2IXvMsYXBV3HiXAPRTLfQvhbffYcPM0-1p_35x61Q2_naIpLnfOaHKXv72dd8KBa77INg5wwGGbaO3Nw4mWRY11b56qz-IcFXcRh1BWnmbS7L9FLoRSQh6HB9yfBI5YUypcXrVLKn_lWZ27hAhBsx6lZUUaZWL7ud3lINS8ELNU0_igENi6GOMDKMjYtSM7cBqvBoE5JtY3oB-SQmwHaIPLADQ6kz29vDYRwZfackAER-fk-EsLvCRAVUYXljeaFjL1KOYcFeguCivxf41gj2WtmA3EV0-RrU5iIG49EfwbRWAsIwSyTZu-XlrIEJZyd_JQ5l0aD3kUoFWM6W0VCdn4JLGukPRJN_Sn9KmHvgCrngW8cq_4M0qtpuCl51MtCy369VPuu_pyVWFd9qxaIEuQJSq1NgKhz9FQAcg21DbhGYbnI9ViccOQPCiXXGnctcr-kK_GjbWKPU6WQ_0G00)
+
+[User Management Service](https://www.plantuml.com/plantuml/uml/bLJDJjj04BxxAPQSG09ouTGJbFRG2afAWb1FaKcMOCa_qNhT5bML2lJd05BQ5oX5LTMh2KG4ICmhpBvHPvRLrea9fP4Sx-pFzttppQmNO-aAcGI-CzNasrx8sV92XUr8sOuVbSl2VJFVykHEifN4N3IYKF9GpZUYeDpstP2EpSMowNjRvUM5kGfDRQokb0CtbbmuKrxOy9CcJuHFeBYblam8R-LycmWdhBieGjop8sX78GyDXhEoz6fjerQlhLNgJzOsNqpFE4w5YpWAfqdnB2l1CMHmhOxW0jzTIDK-z2WktRF6r1xqrPuE1-gGgGCOm13td476u1mo3DCIKbLtCTEW_ZXAmgOhTZLdbOlNNeCZ_0P6RDKDtHOFK34pAwKPzivX-BEvJ0lUyc8fNEb58UdwWSHdjnBK1zJr6SST1ZTtokrGAkjFgpMsL7ccq_eEftGCJY73FLUGCWmBYD2VPGG3rpW-_ylIf_Gp9C4v6E9QRpBpp5WYRY9tyEqrR2fVrO7UFSJ_llg8S5U6ggZx6AKHVW_Vf1gLPQGQLQHbr93IEl6Yy3F2f9rM-FFD6aEI38_I4W8LvBL5jEtvdBX-metsg8iaFPic4MYHD3ae2YHwJEYBFO9kuTmfyOr06VE6wb1zUhXzr3_htDVcnPDKOdMwgWCN-0oWhtMTQ2EwL5yJt-uuca2DpoNYs5uc85tu0zCW6LpIY4xGMa5eqvNkbXjh9xz1YkZfGr8cNX9OYMBP4hpwSaNB_QLp7DeC9n-U7Q_H9SgsZb2CKjyx3ffeFW0Fl5gwVkQ6JovN3lU_Efra5re7-tK4CTUSXJuhtzrarek2l48d5I1DyGdoxj8ZdWOSTJ1V-HFxcUYfVKPD03TaBVJ_vQ5rhuYQ_mgeZaOcsJIWtihVBGmCdlKk3_GRjUmRSMFtr02F67XaiCQiiuZvwsWHHYyZ8Ypoi9a4_Xy0)
+
+
+[Device Registry Service](https://www.plantuml.com/plantuml/uml/ZPDBJnDH5CVtyoakNPL4w8QLAn1OcA0CRObnrGoTAqmoZ-RE7OKO4nwY2mp4n3qIOznM7c6GTlWAPxwH_vDUeTD7XP0xzt7E__pEe_EnTfHE0j-QSkKRBvHYSSuMMrgtugULYdBUpMvwUYlPI6Afcb6ePQXdcr5GQVbEo6upiNPzRwEoE3TZyzNwYvLAuCHQAclA2vj-uif4-ImAayOYAsphsHOynxqxW50JB89M5ChGQ5Wh2wzNr-kD-ghTM5fzzR8yRLcsL74KbfduYIZHAMLqct-XQtpFgPtlqnMVInFUHBv7QRx7H-haHo8_e0vrOND1cQ1Bod1ibn3gdhVnB4f2rr4xPLU-zPgo9XL_46E9pr9KvQONQxKZp4jfMhot1Fxk4oghdecZlIXakE-8Vj7Zo7S1zmdx4x2OYunkUCVSd4jrkLON2_PptjCtlFwcDjvk8TAbbAv6E0ewptTn_PcwM8y5fJ1F1TqXoxNg3Fs1wML-W4IBe2P5xMXEa7xG7LG7WkrHna6mdlIkgFCeTDCIGDrhCHBIuGPCY36sECFuZdOsd9ZPwIkuhwcDfcBJHHsEyiCHAancHx7ULBAsji8d-iav4uVTx_CUK-SK_n3cYiBg8_0lO6QQIZT0_61PjPrOow2nlFslmdNfoq1YQ1x6o5prpH6pdD4LnCvvLaHlXhdUk6ICb58ULQigVVERA0vQOLfGINYDgcC6aGU9WH4uPLFqeuCLRiWM4eyS2wDRXEhlqHci3tlLPhp_rvlQHhEFiYZvYzi63OWDZfS9CKmwKhFOfyBy6ldXVkJ7a9gNePi4_by0)
+
+
+[Automation Service](https://www.plantuml.com/plantuml/uml/bLKxJnjD5EttLmokR0bmG_LLWA50uk4F6qMfh6Kzm4hxi7Pd2IYAPEm42Y8XKaKfo2EAqXeB2sF0_8MPVvHxP0QMyLfAA5ZcphtddFkumtmix4WaliSM4X7wjd33eCAZVTVXfT1lX04FH6nDrVcE6t1McYkpFI4QyN_5OcI_cTrrnLwodSGySi90aEki4_h5XcS7W9o9HTrpjukbkPaoJ5jhgqNVZWMFh2atSBoapfF80oYvr4f0E12p3OgST6-JY6YoXnOyyh1M5rvlR5LhrOroRMdZrNg-O5bb7iLXa8VYQPQJN-LGtggFyfg-NTbHBTd3EOUxxt98zYkodgiMKqVgc2xlwTYKVTbdiYExv3-KTuWZqpLzZt6L8vudiRN5C0dgTdIOjytw4ibppTcZCLTWRor6Fq_9v6E71tRaXek9wzL7khyGxpr9QgccQii1TAYcgR4dkqXaSxbIPGlb5VozjJ935_V8aoBVaykDEcBoYf8-et2TCK7qoK1P4b0F5d2GhOawwViileAXdU_Jxt8KEZoEGqYN5_AIl3loKWv9_Wd53HYOoNmA3da3eReQYFWcUn10N205NJe0Da2nAlUupqLqg4i9_TIZK_c0BbCSIONClz5jEsZAyW5t4Z7I_PauDL1V3mgLRbH3CdIpj7zwfbTdLFIM4G7nD3ePabXU3aRJHTOhTJhDL9iYq0rOR-6D-CAOzhejx6qxvk0_bnqCveJHA8Uns8ruvVzLdEGlD2PTfxOw8gBXA3KIEfPkTYdVMLRbaDRShoqVa1oEQZpF_1BEdAtPWRtBVHBCqWNxAH-WWk1lqpg84SEdkSdX3ekMvX6w_oQLCHcQwGVXW-CERO5wFKZZT2-9Wb2uEwvZhF9wolg2vu8GT4u3sSbiexmX2ckJUuylaxdoOyyHUe6YGoYW-wW94Z4xWY81TmmnFIM4hJu0Hq_f91HpdSThhj_KjZeP2J9sDGl8KFCR-oKx_wB3N5UewEctYmesldRwqJCVY9H64zGSv7HdWIKX-ENIJa3AdA1ilEobnxJCyw2EVtD_0000)
+
+[Notification Service](https://www.plantuml.com/plantuml/uml/dLPTIoD957tlNr7cAK8qBpxjasxCmu8VlIQox5DeEwLfw8_GNUqQbWK_rjN51H4Mvc6OaO4PPXvZD2GQH_z2rJ-QSqcRZtGbEEE3TjswTUuvfsvTN8w45OhOSzb689nTnxQ44_Wb7kuxDYy4NZtmkIyYOwxATnsViyAIoMf2rAEVyldG-cDnpn6rU2UEU6W7la3geXru-Rfh-GIw48cgw-pa2qiB9eMsrzVodXK97XfpZc-xSPN7eKkWIAaK2E50BDPnSjg-1HBXz8o4S89XhAtylhbThfGtpShgvcyRsNd3C7aO1NwM6ETOHbxB9zbJ_yaE_hPaKntBDgqpmxqJTIQRigsEcJgHBMpV8VmeU_ZwAhlgaiadfeuGkr4NE8w8EisWq81jvUSWzgjMsCZwQOjHPzHubeGpy-nFW-5de2ZBz_5xYzlSsK-egqDKkvAFMcBodZGaS3ev4wGX0p5vfmw1Tel8AIMqKQE51QMse6gSak0URbhmehy7eLJZ2x1lP0_PHA53XWBtS0P3-HOnr9CFiabh-P4E88kETebDdonTp8CwmgSUAqMkobrogh7gH7LBsBM-QVy37I2WsQAAhxJkFKuyWnLEmSBBeNrauB-3Je2rC0pB3YjwbkFcc1b7jHmhhPTIzAW1pP3lyf3xDe-eoZje1ZSWFCbxiElEOBTLB9NPYlaBVSjFH8tsw0Q99nrvXj8py1wGqs8XN_C2iArpr1BMZXLnAdc5WfsP_fb19FP2NlfrBJFH6Ug2GHio9-NEvFANOPGQ4LgkKZmGMIiMWJVna5O6CJPwUH_KFu2WQdWlL0MtI6tvqcEa0odOGfMH4eAxtECYR0mhh7BwOEMNdV4wgUS4TuOAwKksnajG4mpHjx4QGxoca-flKEl9xezuPcnnLsTLQfRe6bm_xe0Aq9GvhyK4TI2r-cy-3tNdK7T3IXBW2HZDCtaZctrSEakI2VdrrWmafA37RYCzBtd_IKD9Hrt8Xvocf5v3UamcCqu_tsRwFecbdtBNoHow0y4hCkUMsX60P7mxDRfaEq7NeSNHzxO8oqvEl_bfbe-EbCyql_fUvsM7BXc18rWz_Ohrfan3PUfyT0ZH-rZcVfN-K_W6)
+
+
 **Диаграмма кода (Code)**
 
-Добавьте одну диаграмму или несколько.
+[Включение устройства](https://www.plantuml.com/plantuml/uml/RPBTQi8m5CVlynI7NYaeEdVdnT2vCMKJ7SqB79F3B6kIqiOwttwdJLRQuKq9ER__nmbTLHvBVp6vGELT2Sdwk8Ctz7J5Mm9O0HQPA1Z9L5QWzP1id35eDJ3u1tpWZShxr9O_EPKjUGxd8VX2TQO8Ki-Pi4UBNv6kcfkxx5fZuIE5uVoFUsvd-YG4juFfKrSIbd0yf19ckhMgPW-Bnvcpefip6sio-lf3wk8fxZ8AcfrUicW2okXbucmo5b70sb2QbPipgUzGjzrin9An2DFf8EFmtjV7TVW-9QjZi7J1QTJcXim83ZMvkqvpgYc7hPH7S2NiFwNi--jJOurrjrDdEG6V6UA6fXZtdYEy7OiMytdJLQouL_Ex_080)
 
 # Задание 3. Разработка ER-диаграммы
 
 Добавьте сюда ER-диаграмму. Она должна отражать ключевые сущности системы, их атрибуты и тип связей между ними.
 
+[ER-диаграмму](https://www.plantuml.com/plantuml/uml/dPDFYzim4CNl_XGw5_85p1Bs44fBAPHsSpPJQR8Uq1ypCqe8k_tkbRF6oAaNjxq4yjwpta_Iw54KM7FmJKyEZIMs7fi6ev9UpL6GpKjZp0T3phJcUFnyC0yFtxxizqNSxSeF1Y1VB56c-5o4K_O-Gi1Q6q3aajXrFKXV6vOH55q7MbG7Yae1crypmAUK1JS8IeAxslpuPe9pZ29rtOAhgZdWcIm-NOUjhlkDEHJBD2Yb-Fww6sjggLtZxrEMLKEG2NmNS_Y9NDE8WkQ_sl3NvBBV0dCZ_If1k7tUZUIBgoSE5s3ipiZopf4yeSU0ojS3AFmtm3WceX26UcoC6HScsortFSjdy7dKJpw1LaW_B4PWIXiqw_VnpqCnrttVlW6PeckjDaL7omvZmFxHUdl3hw-xNNgPdbDhqYMAsJTlVoTlcjLsN5Y1Re7gNTod79ueuXoQ0zDajOQYzTcj99OJq9fdZCYWU4yq7rJ9z32wip05gfESm8L4fKkd4cuUCReSVFCR)
+
 # Задание 4. Создание и документирование API
 
 ### 1. Тип API
 
-Укажите, какой тип API вы будете использовать для взаимодействия микросервисов. Объясните своё решение.
+В архитектуре используется смешанная модель: REST API предназначен для взаимодействия с внешними клиентами, поскольку обеспечивает простое и синхронное управление запросами (например, регистрация, получение данных), а AsyncAPI используется для внутренней связи между микросервисами, так как позволяет реализовать надёжную, масштабируемую и асинхронную обработку событий без жёсткой связности.
 
 ### 2. Документация API
 
-Здесь приложите ссылки на документацию API для микросервисов, которые вы спроектировали в первой части проектной работы. Для документирования используйте Swagger/OpenAPI или AsyncAPI.
+[Документация](https://github.com/ytnn/architecture-pro-warmhouse/blob/warmhouse/swagger.json)
 
 # Задание 5. Работа с docker и docker-compose
 
-Перейдите в apps.
-
-Там находится приложение-монолит для работы с датчиками температуры. В README.md описано как запустить решение.
-
-Вам нужно:
-
-1) сделать простое приложение temperature-api на любом удобном для вас языке программирования, которое при запросе /temperature?location= будет отдавать рандомное значение температуры.
-
-Locations - название комнаты, sensorId - идентификатор названия комнаты
-
-```
-	// If no location is provided, use a default based on sensor ID
-	if location == "" {
-		switch sensorID {
-		case "1":
-			location = "Living Room"
-		case "2":
-			location = "Bedroom"
-		case "3":
-			location = "Kitchen"
-		default:
-			location = "Unknown"
-		}
-	}
-
-	// If no sensor ID is provided, generate one based on location
-	if sensorID == "" {
-		switch location {
-		case "Living Room":
-			sensorID = "1"
-		case "Bedroom":
-			sensorID = "2"
-		case "Kitchen":
-			sensorID = "3"
-		default:
-			sensorID = "0"
-		}
-	}
-```
-
-2) Приложение следует упаковать в Docker и добавить в docker-compose. Порт по умолчанию должен быть 8081
-
-3) Кроме того для smart_home приложения требуется база данных - добавьте в docker-compose файл настройки для запуска postgres с указанием скрипта инициализации ./smart_home/init.sql
-
-Для проверки можно использовать Postman коллекцию smarthome-api.postman_collection.json и вызвать:
-
-- Create Sensor
-- Get All Sensors
-
-Должно при каждом вызове отображаться разное значение температуры
-
-Ревьюер будет проверять точно так же.
-
-
-# **Задание 6. Разработка MVP**
-
-Необходимо создать новые микросервисы и обеспечить их интеграции с существующим монолитом для плавного перехода к микросервисной архитектуре. 
-
-### **Что нужно сделать**
-
-1. Создайте новые микросервисы для управления телеметрией и устройствами (с простейшей логикой), которые будут интегрированы с существующим монолитным приложением. Каждый микросервис на своем ООП языке.
-2. Обеспечьте взаимодействие между микросервисами и монолитом (при желании с помощью брокера сообщений), чтобы постепенно перенести функциональность из монолита в микросервисы. 
-
-В результате у вас должны быть созданы Dockerfiles и docker-compose для запуска микросервисов. 
+Добавил в apps temperature-api.

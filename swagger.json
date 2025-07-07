@@ -1,0 +1,195 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Device Management API",
+    "version": "1.0.0",
+    "description": "API для управления устройствами умного дома"
+  },
+  "paths": {
+    "/api/devices/{deviceId}": {
+      "get": {
+        "summary": "Получение информации об устройстве",
+        "parameters": [
+          {
+            "name": "deviceId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Информация об устройстве",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Device"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Устройство не найдено"
+          },
+          "500": {
+            "description": "Ошибка сервера"
+          }
+        }
+      }
+    },
+    "/api/devices/{deviceId}/state": {
+      "patch": {
+        "summary": "Обновление состояния устройства",
+        "parameters": [
+          {
+            "name": "deviceId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeviceStateUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Состояние обновлено"
+          },
+          "400": {
+            "description": "Неверные данные"
+          },
+          "404": {
+            "description": "Устройство не найдено"
+          },
+          "500": {
+            "description": "Ошибка сервера"
+          }
+        }
+      }
+    },
+    "/api/devices/{deviceId}/commands": {
+      "post": {
+        "summary": "Отправка команды устройству",
+        "parameters": [
+          {
+            "name": "deviceId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeviceCommand"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Команда принята к исполнению"
+          },
+          "400": {
+            "description": "Ошибка запроса"
+          },
+          "404": {
+            "description": "Устройство не найдено"
+          },
+          "500": {
+            "description": "Ошибка сервера"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Device": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "example": "heater"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["online", "offline", "error"]
+          },
+          "state": {
+            "type": "object",
+            "example": {
+              "power": "on",
+              "temperature": 21
+            }
+          },
+          "location": {
+            "type": "object",
+            "properties": {
+              "homeId": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "room": {
+                "type": "string"
+              }
+            }
+          },
+          "lastUpdated": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": ["id", "name", "type", "status", "state"]
+      },
+      "DeviceStateUpdate": {
+        "type": "object",
+        "example": {
+          "power": "off",
+          "temperature": 19
+        }
+      },
+      "DeviceCommand": {
+        "type": "object",
+        "properties": {
+          "command": {
+            "type": "string",
+            "example": "setTemperature"
+          },
+          "parameters": {
+            "type": "object",
+            "example": {
+              "value": 22
+            }
+          }
+        },
+        "required": ["command"]
+      }
+    }
+  }
+}
